@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Spring Boot Blog Application</h1>
+        <h1>Travel Buddies</h1>
         <hr />
         <a th:href="@{/}">Home</a>
         <h2>Login</h2>
@@ -27,11 +27,11 @@
               th:action="@{/login}"
               method="POST">
             <div>
-                <label for="email">Email</label>
+                <label for="email">Email:</label>
                 <input id="email" type="text" name="email" placeholder="Email" />
             </div>
             <div>
-                <label for="password">Password</label>
+                <label for="password">Password:</label>
                 <input id="password" type="password" name="password" placeholder="Password" />
             </div>
             <button type="submit">Login!</button>
