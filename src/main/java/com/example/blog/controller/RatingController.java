@@ -10,15 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/ratings")
 @RequiredArgsConstructor
 @Slf4j
@@ -29,7 +26,7 @@ public class RatingController {
     private final UserService userService;
 
     @PostMapping("/{postId}")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public String addRating(@PathVariable Long postId, @RequestParam int value, Principal principal) {
         String authUsername = principal.getName();
         User user = userService.findByEmail(authUsername).orElseThrow(() -> new IllegalArgumentException("User not found"));

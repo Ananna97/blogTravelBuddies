@@ -10,15 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/comments")
 @RequiredArgsConstructor
 @Slf4j
@@ -29,7 +26,7 @@ public class CommentController {
     private final UserService userService;
 
     @PostMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public String createNewComment(@PathVariable Long id, @ModelAttribute Comment comment, Principal principal) {
         String authUsername = "anonymousUser";
 

@@ -1,9 +1,12 @@
 package com.example.blog.controller;
 
+import com.example.blog.dto.PostDTO;
+import com.example.blog.dto.PostDetailsDTO;
 import com.example.blog.model.Comment;
 import com.example.blog.model.Post;
 import com.example.blog.model.Rating;
 import com.example.blog.model.User;
+import com.example.blog.repository.PostRepository;
 import com.example.blog.service.CategoryService;
 import com.example.blog.service.CommentService;
 import com.example.blog.service.PostService;
@@ -19,8 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 @Slf4j
@@ -33,30 +37,56 @@ public class PostController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private PostRepository postRepository;
+    @GetMapping
+    public List<PostDTO> getPosts() {
+        List<Post> posts = postService.findAll();
+        return posts.stream()
+                .map(post -> new PostDTO(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getBody(),
+                        post.getUser().getFirstName(),
+                        post.getUser().getLastName(),
+                        post.getCreatedAt()))
+                .collect(Collectors.toList());
+    }
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public String getPost(@PathVariable Long id, Model model) {
-        Optional<Post> optionalPost = Optional.ofNullable(this.postService.findById(id));
-        if (optionalPost.isPresent()) {
-            Post post = optionalPost.get();
-            List<Comment> comments = commentService.findAllByPost(post);
-            model.addAttribute("comments", comments);
-            Double averageRating = postService.calculateAverageRating(post);
-
-            model.addAttribute("post", post);
-            model.addAttribute("comments", comments);
-            model.addAttribute("comments", comments);
-            model.addAttribute("comment", new Comment());
-            model.addAttribute("averageRating", averageRating);
-            model.addAttribute("rating", new Rating());
-            return "post";
-        } else {
-            return "error";
-        }
+//    @PreAuthorize("isAuthenticated()")
+    public PostDetailsDTO getPost(@PathVariable Long id) {
+        Post post = postService.findById(id);
+        return new PostDetailsDTO(
+                post.getId(),
+                post.getTitle(),
+                post.getBody(),
+                post.getCreatedAt(),
+                post.getUpdatedAt(),
+                post.getUser().getFirstName(),
+                post.getUser().getLastName(),
+                post.getRatings(),
+                post.getComments());
+//        Optional<Post> optionalPost = Optional.ofNullable(this.postService.findById(id));
+//        if (optionalPost.isPresent()) {
+//            Post post = optionalPost.get();
+//            List<Comment> comments = commentService.findAllByPost(post);
+//            model.addAttribute("comments", comments);
+//            Double averageRating = postService.calculateAverageRating(post);
+//
+//            model.addAttribute("post", post);
+//            model.addAttribute("comments", comments);
+//            model.addAttribute("comments", comments);
+//            model.addAttribute("comment", new Comment());
+//            model.addAttribute("averageRating", averageRating);
+//            model.addAttribute("rating", new Rating());
+//            return "post";
+//        } else {
+//            return "error";
+//        }
     }
 
     @GetMapping("/new")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public String createNewPost(Model model) {
 
         Post post = new Post();
@@ -66,7 +96,7 @@ public class PostController {
     }
 
     @PostMapping("/new")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public String createNewPost(@ModelAttribute Post post, Principal principal) {
         String authUsername = "anonymousUser";
         if (principal != null) {
@@ -81,7 +111,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}/edit")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String getPostForEdit(@PathVariable Long id, Model model) {
         Optional<Post> optionalPost = Optional.ofNullable(postService.findById(id));
         if (optionalPost.isPresent()) {
@@ -94,7 +124,7 @@ public class PostController {
     }
 
     @PostMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updatePost(@PathVariable Long id, Post post) {
 
         Optional<Post> optionalPost = Optional.ofNullable(postService.findById(id));
@@ -112,7 +142,7 @@ public class PostController {
 
 
     @GetMapping("/{id}/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deletePost(@PathVariable Long id) {
         Optional<Post> optionalPost = Optional.ofNullable(postService.findById(id));
         if (optionalPost.isPresent()) {

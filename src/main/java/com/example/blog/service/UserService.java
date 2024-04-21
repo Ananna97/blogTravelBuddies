@@ -4,14 +4,12 @@ import com.example.blog.model.Role;
 import com.example.blog.model.User;
 import com.example.blog.repository.RoleRepository;
 import com.example.blog.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -49,4 +47,31 @@ public class UserService {
     {
         return userRepository.findByEmail(email);
     }
+
+    public void authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }        // TODO: Implement authentication logic using Spring Security
+
+    }
+
+    public void register(User user, String roleName) {
+        if (user.getRoles().isEmpty()) {
+            Set<Role> roles = new HashSet<>();
+            roleRepository.findById("ROLE_USER").ifPresent(roles::add);
+            user.setRoles(roles);
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        LocalDateTime now = LocalDateTime.now();
+        user.setCreatedAt(now);
+        user.setUpdatedAt(now);
+
+        userRepository.save(user);
+    }
+
 }

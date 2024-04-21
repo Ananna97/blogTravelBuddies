@@ -17,6 +17,7 @@ import java.util.List;
 @ToString
 @Builder
 @AllArgsConstructor
+@Table(name = "post")
 public class Post {
 
     @Id

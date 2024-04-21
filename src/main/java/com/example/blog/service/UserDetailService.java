@@ -32,6 +32,8 @@ public class UserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
         User user = optionalUser.get();
+        System.out.println("Loaded user: " + user.getEmail() + ", Pass: " + user.getPassword());
+
         List<GrantedAuthority> grantedPermissions = user
                 .getRoles()
                 .stream()
