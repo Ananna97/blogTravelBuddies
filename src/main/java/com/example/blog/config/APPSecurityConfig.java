@@ -36,7 +36,7 @@ public class APPSecurityConfig {
                     auth.requestMatchers(antMatcher("/rss/**")).permitAll();
                     auth.requestMatchers(antMatcher("/register/**")).permitAll();
                     auth.requestMatchers(antMatcher("/posts/**")).permitAll();
-                    auth.requestMatchers(antMatcher("/login")).permitAll(); // Permit access to /login
+                    auth.requestMatchers(antMatcher("/login")).permitAll();
                     auth.anyRequest().authenticated();
                 })
 

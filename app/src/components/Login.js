@@ -31,7 +31,7 @@ function Login() {
         <Grid container spacing={0} style={{ height: '100vh' }}>
             <Grid item xs={12} sm={6} style={{ backgroundColor: '#FDFBEE', position: 'relative' }}>
                 <Box position="absolute" top="10%" left="5%" transform="translate(-50%, -50%)">
-                    <img src={Globe} alt="Globe" style={{ width: '800px', height: 'auto' }} />
+                    <img src={Globe} alt="Globe" style={{ width: '700px', height: 'auto' }} />
                 </Box>
             </Grid>
             <Grid item xs={12} sm={6} component={Paper} elevation={3} square>

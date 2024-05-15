@@ -66,29 +66,11 @@ public class PostController {
                 post.getUser().getLastName(),
                 post.getRatings(),
                 post.getComments());
-//        Optional<Post> optionalPost = Optional.ofNullable(this.postService.findById(id));
-//        if (optionalPost.isPresent()) {
-//            Post post = optionalPost.get();
-//            List<Comment> comments = commentService.findAllByPost(post);
-//            model.addAttribute("comments", comments);
-//            Double averageRating = postService.calculateAverageRating(post);
-//
-//            model.addAttribute("post", post);
-//            model.addAttribute("comments", comments);
-//            model.addAttribute("comments", comments);
-//            model.addAttribute("comment", new Comment());
-//            model.addAttribute("averageRating", averageRating);
-//            model.addAttribute("rating", new Rating());
-//            return "post";
-//        } else {
-//            return "error";
-//        }
     }
 
     @GetMapping("/new")
 //    @PreAuthorize("isAuthenticated()")
     public String createNewPost(Model model) {
-
         Post post = new Post();
         model.addAttribute("post", new Post());
         model.addAttribute("categories", categoryService.findAll());
