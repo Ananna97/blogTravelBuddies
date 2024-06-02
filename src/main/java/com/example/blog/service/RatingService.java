@@ -1,5 +1,6 @@
 package com.example.blog.service;
 
+import com.example.blog.model.Comment;
 import com.example.blog.model.Rating;
 import com.example.blog.repository.RatingRepository;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,9 @@ public class RatingService {
 
     public Rating save(Rating rating) {
         return ratingRepository.save(rating);
+    }
+
+    public Rating findById(Long id) {
+        return ratingRepository.findById(id).orElse(null);
     }
 }

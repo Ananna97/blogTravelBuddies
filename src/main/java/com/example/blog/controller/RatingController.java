@@ -1,5 +1,8 @@
 package com.example.blog.controller;
 
+import com.example.blog.dto.CommentDTO;
+import com.example.blog.dto.RatingDTO;
+import com.example.blog.model.Rating;
 import com.example.blog.model.Post;
 import com.example.blog.model.Rating;
 import com.example.blog.model.User;
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/ratings")
@@ -24,6 +29,25 @@ public class RatingController {
     private final RatingService ratingService;
     private final PostService postService;
     private final UserService userService;
+
+    @GetMapping
+    public List<RatingDTO> getRatings() {
+        List<Rating> ratings = ratingService.findAll();
+        return ratings.stream()
+                .map(rating -> new RatingDTO(
+                        rating.getId(),
+                        rating.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+//    @PreAuthorize("isAuthenticated()")
+    public RatingDTO getRating(@PathVariable Long id) {
+        Rating rating = ratingService.findById(id);
+        return new RatingDTO(
+                rating.getId(),
+                rating.getValue());
+    }
 
     @PostMapping("/{postId}")
 //    @PreAuthorize("isAuthenticated()")

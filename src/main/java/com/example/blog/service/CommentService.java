@@ -15,6 +15,11 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElse(null);
+    }
+
+
     public List<Comment> findAll() {
         return commentRepository.findAll();
     }

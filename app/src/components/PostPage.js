@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, Typography, CircularProgress, Grid, Box } from '@mui/material';
 import axios from 'axios';
+import Rating from './Rating'; // Import the Rating component
+import Comment from './Comment'; // Import the Comment component
 
 const PostPage = () => {
     const { id } = useParams();
@@ -44,12 +46,6 @@ const PostPage = () => {
                     <Typography variant="body2" color="text.secondary" style={{ marginRight: '20px', fontSize: '1rem' }}>
                         Created At: {new Date(post.createdAt).toLocaleString()}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" style={{ fontSize: '1rem' }}>
-                        Ratings:
-                        {post.ratings.map(rating => (
-                            <span key={rating.id} style={{ margin: '0 5px' }}> {rating.value} </span>
-                        ))}
-                    </Typography>
                 </Box>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={4}>
@@ -67,6 +63,18 @@ const PostPage = () => {
                         </Box>
                     </Grid>
                 </Grid>
+
+                <Box display="flex" justifyContent="left" alignItems="left" mb={10}>
+                    <Rating ratings={post.ratings} />
+                </Box>
+
+                <Typography variant="h5" gutterBottom>
+                    Comments
+                </Typography>
+                {post.comments.map(comment => {
+                    console.log(comment);
+                    return <Comment key={comment.id} comment={comment} />;
+                })}
             </CardContent>
         </Card>
     );

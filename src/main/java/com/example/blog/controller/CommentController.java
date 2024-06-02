@@ -1,5 +1,8 @@
 package com.example.blog.controller;
 
+import com.example.blog.dto.CommentDTO;
+import com.example.blog.dto.PostDTO;
+import com.example.blog.dto.PostDetailsDTO;
 import com.example.blog.model.Comment;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/comments")
@@ -24,6 +29,29 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
     private final UserService userService;
+
+
+    @GetMapping
+    public List<CommentDTO> getComments() {
+        List<Comment> comments = commentService.findAll();
+        return comments.stream()
+                .map(comment -> new CommentDTO(
+                        comment.getId(),
+                        comment.getText(),
+                        comment.getUser().getFirstName(),
+                        comment.getUser().getLastName()))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public CommentDTO getComment(@PathVariable Long id) {
+        Comment comment = commentService.findById(id);
+        return new CommentDTO(
+                comment.getId(),
+                comment.getText(),
+                comment.getUser().getFirstName(),
+                comment.getUser().getLastName());
+    }
 
     @PostMapping("/{id}")
 //    @PreAuthorize("isAuthenticated()")
