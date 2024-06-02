@@ -30,7 +30,6 @@ public class CommentController {
     private final PostService postService;
     private final UserService userService;
 
-
     @GetMapping
     public List<CommentDTO> getComments() {
         List<Comment> comments = commentService.findAll();
@@ -42,8 +41,8 @@ public class CommentController {
                         comment.getUser().getLastName()))
                 .collect(Collectors.toList());
     }
-
     @GetMapping("/{id}")
+//    @PreAuthorize("isAuthenticated()")
     public CommentDTO getComment(@PathVariable Long id) {
         Comment comment = commentService.findById(id);
         return new CommentDTO(

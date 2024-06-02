@@ -39,7 +39,10 @@ const PostPage = () => {
                 <Typography variant="h3" gutterBottom align="center">
                     {post.title}
                 </Typography>
-                <Box display="flex" justifyContent="center" alignItems="center" mb={10}>
+                <Box display="flex" justifyContent="center" alignItems="center" mb={10} >
+                    <Typography variant="body2" color="text.secondary" style={{ marginRight: '20px', fontSize: '1rem' }}>
+                        Category: {post.categoryName}
+                    </Typography>
                     <Typography variant="body2" color="text.secondary" style={{ marginRight: '20px', fontSize: '1rem' }}>
                         Author: {post.authorFirstName} {post.authorLastName}
                     </Typography>
@@ -55,8 +58,15 @@ const PostPage = () => {
                             style={{width: '100%', height: 'auto'}}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={8}>
-                        <Box px={2}>
+                    <Grid item xs={12} sm={8} >
+                        <Box px={2}
+                             style={{
+                                 marginRight: '20px',
+                                 marginBottom: '20px',
+                                 marginLeft: '10px',
+                                 width: '800px',
+                                 backgroundColor: '#FBF8DD' // Grey background color
+                             }}>
                             <Typography variant="body1" paragraph>
                                 {post.body}
                             </Typography>
@@ -64,9 +74,9 @@ const PostPage = () => {
                     </Grid>
                 </Grid>
 
-                <Box display="flex" justifyContent="left" alignItems="left" mb={10}>
+                <Typography variant="h5" gutterBottom>
                     <Rating ratings={post.ratings} />
-                </Box>
+                </Typography>
 
                 <Typography variant="h5" gutterBottom>
                     Comments
