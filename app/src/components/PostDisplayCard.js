@@ -9,6 +9,26 @@ const PostDisplayCard = ({ post }) => {
         navigate(`/posts/${post.id}`);
     };
 
+    const renderImage = () => {
+        let imageUrl = '';
+        if (post.id === 1) {
+            imageUrl = "../../barcelona.jpg";
+        } else {
+            if (post.id === 2) {
+                imageUrl = "../../bologna.jpg";
+            } else {
+                imageUrl = "../../amsterdam.jpg";
+            }
+        }
+        return (
+            <img
+                src={imageUrl}  // Replace with your custom image URL
+                alt="Custom"
+                style={{width: '100%', height: 'auto'}}
+            />
+        );
+    };
+
     return (
         <Card
             variant="outlined"
@@ -35,19 +55,16 @@ const PostDisplayCard = ({ post }) => {
                 </Typography>
                 {/*{post.imageUrl && (*/
                     <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
-                        <img
-                            src="../../gettyimages-1467072114-656f160a0a37b.jpg"  // Replace with your custom image URL
-                            alt="Custom"
-                            style={{width: '100%', height: 'auto'}}
-                        />
+                        {renderImage()}
                     </Box>
-}
-                <Button variant="contained" onClick={handleSeeMore} style={{backgroundColor:"#FFAE31", marginTop: '10px'}}>
+                }
+                <Button variant="contained" onClick={handleSeeMore}
+                        style={{backgroundColor: "#FFAE31", marginTop: '10px'}}>
                     See More
                 </Button>
             </CardContent>
         </Card>
-    );
+);
 };
 
 export default PostDisplayCard;
