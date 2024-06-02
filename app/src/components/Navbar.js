@@ -1,25 +1,40 @@
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import {useLocation, Link, useNavigate} from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material';
 import Logo from '../logo.png';
 
-const Navbar = ({ isLoggedIn, onLogout }) => {
+const Navbar = ({ isLoggedIn }) => {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        console.log(isLoggedIn)
-        onLogout();
+        navigate('/');
+    };
+
+    const handleHome = () => {
+        navigate('/posts');
     };
 
     return (
         <AppBar position="static" style={{ backgroundColor: '#FFAE31' }}>
             <Toolbar>
                 {/* Logo on the left */}
-                <IconButton edge="start" color="inherit" aria-label="logo">
+                <IconButton onClick={handleHome} edge="start" color="inherit" aria-label="logo">
                     <img src={Logo} alt="Logo" style={{ width: '160px', height: 'auto' }} />
                 </IconButton>
-                {isLoggedIn && location.pathname !== '/login' && (
-                    <Button color="inherit" onClick={handleLogout}>Logout</Button>
+
+                {location.pathname !== '/login' && location.pathname !== '/register' && location.pathname !== '/' && (
+                    <Button onClick={handleLogout}
+                            style={{backgroundColor:'transparent',
+                                color:'white',
+                                float: 'right',
+                                marginTop: '20px',
+                                marginLeft:'80%',
+                                outline: 'none',
+                                boxShadow: 'none',
+                                marginBottom: '20px' }}>
+                        Logout
+                    </Button>
                 )}
             </Toolbar>
         </AppBar>

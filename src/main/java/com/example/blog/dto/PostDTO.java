@@ -18,5 +18,6 @@ public class PostDTO {
     private String authorFirstName;
     private String authorLastName;
     private LocalDateTime createdAt;
+    private String categoryName;
 
 }

@@ -51,6 +51,9 @@ function Register() {
             <Grid item xs={12} sm={6} component={Paper} elevation={3} square>
                 <Grid container justifyContent="center" alignItems="center" style={{ height: '100%' }}>
                     <Grid item xs={10}>
+                        <Typography variant="h4" align="center" gutterBottom>
+                            Welocome to Travel Buddies!
+                        </Typography>
                         <Typography variant="h4" align="center" gutterBottom>Sign Up Page</Typography>
                         {error && <p className="text-danger">{error}</p>}
                         <MDBInput wrapperClass='mb-3' id='firstName' placeholder={"First Name"} value={firstName} type='text' onChange={(e) => setFirstName(e.target.value)}/>

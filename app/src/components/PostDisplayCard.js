@@ -42,7 +42,7 @@ const PostDisplayCard = ({ post }) => {
                         />
                     </Box>
 }
-                <Button variant="contained" color="primary" onClick={handleSeeMore} style={{marginTop: '10px'}}>
+                <Button variant="contained" onClick={handleSeeMore} style={{backgroundColor:"#FFAE31", marginTop: '10px'}}>
                     See More
                 </Button>
             </CardContent>

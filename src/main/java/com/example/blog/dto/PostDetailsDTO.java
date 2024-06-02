@@ -25,5 +25,6 @@ public class PostDetailsDTO {
     private String authorLastName;
     private List<Rating> ratings;
     private List<Comment> comments;
+    private String categoryName;
 
 }

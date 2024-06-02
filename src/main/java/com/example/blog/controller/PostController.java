@@ -49,7 +49,8 @@ public class PostController {
                         post.getBody(),
                         post.getUser().getFirstName(),
                         post.getUser().getLastName(),
-                        post.getCreatedAt()))
+                        post.getCreatedAt(),
+                        post.getCategory().getCategoryName()))
                 .collect(Collectors.toList());
     }
     @GetMapping("/{id}")
@@ -65,7 +66,8 @@ public class PostController {
                 post.getUser().getFirstName(),
                 post.getUser().getLastName(),
                 post.getRatings(),
-                post.getComments());
+                post.getComments(),
+                post.getCategory().getCategoryName());
     }
 
     @GetMapping("/new")

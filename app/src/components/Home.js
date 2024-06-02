@@ -21,15 +21,9 @@ function Home({ email }) {
         fetchPosts();
     }, []);
 
-    const handleLogout = () => {
-        navigate('/');
-    };
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
-            <Button variant="contained" color="secondary" onClick={handleLogout} style={{ marginBottom: '20px' }}>
-                Logout
-            </Button>
             <Box mt={2}>
                 <PostFeed posts={posts} />
             </Box>
