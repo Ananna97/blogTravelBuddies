@@ -33,6 +33,26 @@ const PostPage = () => {
         return <Typography variant="h6">Post not found</Typography>;
     }
 
+    const renderImage = () => {
+        let imageUrl = '';
+        if (post.id === 1) {
+            imageUrl = "../../barcelona.jpg";
+        } else {
+            if (post.id === 2) {
+                imageUrl = "../../bologna.jpg";
+            } else {
+                imageUrl = "../../amsterdam.jpg";
+            }
+        }
+        return (
+            <img
+                src={imageUrl}  // Replace with your custom image URL
+                alt="Custom"
+                style={{width: '100%', height: 'auto'}}
+            />
+        );
+    };
+
     return (
         <Card variant="outlined">
             <CardContent>
@@ -52,11 +72,7 @@ const PostPage = () => {
                 </Box>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={4}>
-                        <img
-                            src="../../gettyimages-1467072114-656f160a0a37b.jpg"  // Replace with your custom image URL
-                            alt="Custom"
-                            style={{width: '100%', height: 'auto'}}
-                        />
+                        {renderImage()}
                     </Grid>
                     <Grid item xs={12} sm={8} >
                         <Box px={2}
@@ -77,13 +93,9 @@ const PostPage = () => {
                 <Typography variant="h5" gutterBottom>
                     <Rating ratings={post.ratings} />
                 </Typography>
-
-                <Typography variant="h5" gutterBottom>
-                    Comments
-                </Typography>
                 {post.comments.map(comment => {
                     console.log(comment);
-                    return <Comment key={comment.id} comment={comment} />;
+                    return (<Comment key={comment.id} comment={comment} />);
                 })}
             </CardContent>
         </Card>
