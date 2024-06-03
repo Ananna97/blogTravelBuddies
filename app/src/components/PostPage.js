@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, Typography, CircularProgress, Grid, Box } from '@mui/material';
 import axios from 'axios';
-import Rating from './Rating'; // Import the Rating component
+import Rating from './Rating';
 import Comment from './Comment';
-import PostDisplayCard from "./PostDisplayCard"; // Import the Comment component
 
 const PostPage = () => {
     const { id } = useParams();
@@ -47,7 +46,7 @@ const PostPage = () => {
         }
         return (
             <img
-                src={imageUrl}  // Replace with your custom image URL
+                src={imageUrl}
                 alt="Custom"
                 style={{width: '100%', height: 'auto'}}
             />
@@ -82,7 +81,7 @@ const PostPage = () => {
                                  marginBottom: '20px',
                                  marginLeft: '10px',
                                  width: '800px',
-                                 backgroundColor: '#FBF8DD' // Grey background color
+                                 backgroundColor: '#FBF8DD'
                              }}>
                             <Typography variant="body1" paragraph>
                                 {post.body}
@@ -92,7 +91,7 @@ const PostPage = () => {
                 </Grid>
 
                 <Typography variant="h5" gutterBottom>
-                    <Rating ratings={post.ratings} />
+                    <Rating ratings={post.ratings} postId={id} />
                 </Typography>
 
                 <Typography variant="h5" gutterBottom>
