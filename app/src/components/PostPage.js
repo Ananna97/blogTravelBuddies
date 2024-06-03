@@ -98,9 +98,11 @@ const PostPage = () => {
                 <Typography variant="h5" gutterBottom>
                     Comments
                 </Typography>
-                {post.comments.map(comment => (
-                    <Comment key={comment.id} comment={comment}/>
-                ))}
+                    {post.comments
+                        .filter((comment, index, self) => self.findIndex(c => c.id === comment.id) === index)
+                        .map(comment => {
+                            return <Comment key={comment.id} comment={comment} />;
+                    })}
             </CardContent>
         </Card>
     );
