@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Card, CardContent, Typography, CircularProgress, Grid, Box } from '@mui/material';
 import axios from 'axios';
 import Rating from './Rating'; // Import the Rating component
-import Comment from './Comment'; // Import the Comment component
+import Comment from './Comment';
+import PostDisplayCard from "./PostDisplayCard"; // Import the Comment component
 
 const PostPage = () => {
     const { id } = useParams();
@@ -93,10 +94,15 @@ const PostPage = () => {
                 <Typography variant="h5" gutterBottom>
                     <Rating ratings={post.ratings} />
                 </Typography>
-                {post.comments.map(comment => {
-                    console.log(comment);
-                    return (<Comment key={comment.id} comment={comment} />);
-                })}
+
+                <Typography variant="h5" gutterBottom>
+                    Comments
+                </Typography>
+                    {post.comments
+                        .filter((comment, index, self) => self.findIndex(c => c.id === comment.id) === index)
+                        .map(comment => {
+                            return <Comment key={comment.id} comment={comment} />;
+                    })}
             </CardContent>
         </Card>
     );
