@@ -11,8 +11,6 @@ import com.example.blog.service.RatingService;
 import com.example.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +50,8 @@ public class RatingController {
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<String> addRating(@PathVariable Long postId, @RequestParam int value, Principal principal) {
+//    @PreAuthorize("isAuthenticated()")
+    public String addRating(@PathVariable Long postId, @RequestParam int value, Principal principal) {
         String authUsername = principal.getName();
         User user = userService.findByEmail(authUsername).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -63,16 +62,9 @@ public class RatingController {
             newRating.setValue(value);
             newRating.setUser(user);
             newRating.setPost(post);
-
-            try {
-                ratingService.save(newRating);
-                return ResponseEntity.ok().body("Rating added successfully");
-            } catch (Exception e) {
-                log.error("Error adding rating", e);
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add rating");
-            }
-        } else {
-            return ResponseEntity.notFound().build();
+            ratingService.save(newRating);
         }
+
+        return "redirect:/posts/" + postId;
     }
 }
