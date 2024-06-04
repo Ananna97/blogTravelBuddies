@@ -49,22 +49,25 @@ public class RatingController {
                 rating.getValue());
     }
 
-    @PostMapping("/{postId}")
-//    @PreAuthorize("isAuthenticated()")
-    public String addRating(@PathVariable Long postId, @RequestParam int value, Principal principal) {
-        String authUsername = principal.getName();
-        User user = userService.findByEmail(authUsername).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public RatingDTO addRating(@PathVariable Long postId, @RequestBody RatingDTO ratingDTO)
+    {
+        User randomUser = new User();
+        randomUser.setFirstName("Ionica");
+        randomUser.setLastName("Grosu");
+        randomUser.setPassword("defaultPassword");
+        User savedUser = userService.save(randomUser);
 
-        Optional<Post> optionalPost = Optional.ofNullable(postService.findById(postId));
-        if (optionalPost.isPresent()) {
-            Post post = optionalPost.get();
-            Rating newRating = new Rating();
-            newRating.setValue(value);
-            newRating.setUser(user);
-            newRating.setPost(post);
-            ratingService.save(newRating);
-        }
+        Rating rating = new Rating();
+        rating.setValue(ratingDTO.getValue());
+        rating.setUser(savedUser);
 
-        return "redirect:/posts/" + postId;
+        Post post = postService.findById(postId);
+        rating.setPost(post);
+
+        Rating savedRating = ratingService.save(rating);
+        return new RatingDTO(
+                savedRating.getId(),
+                savedRating.getValue());
+
     }
 }
