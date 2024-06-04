@@ -49,6 +49,8 @@ public class RatingController {
                 rating.getValue());
     }
 
+
+    @PostMapping("/{postId}")
     public RatingDTO addRating(@PathVariable Long postId, @RequestBody RatingDTO ratingDTO)
     {
         User randomUser = new User();

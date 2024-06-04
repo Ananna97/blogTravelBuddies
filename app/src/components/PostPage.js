@@ -22,6 +22,7 @@ const PostPage = () => {
                 const response = await axios.get(`/posts/${id}`);
                 setPost(response.data);
                 setComments(response.data.comments);
+                setRatings(response.data.ratings);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching post:', error);
@@ -40,7 +41,7 @@ const PostPage = () => {
     const handleRatingSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`/ratings/${id}`, { text: newRating });
+            const response = await axios.post(`/ratings/${id}`, { value: newRating });
             const newRatingData = response.data;
             setRatings([...ratings, newRatingData]);
             setNewRating('');
@@ -98,13 +99,13 @@ const PostPage = () => {
                     {post.title}
                 </Typography>
                 <Box display="flex" justifyContent="center" alignItems="center" mb={10}>
-                    <Typography variant="body2" color="text.secondary" style={{ marginRight: '20px', fontSize: '1rem' }}>
+                    <Typography variant="body2" color="text.secondary" style={{marginRight: '20px', fontSize: '1rem'}}>
                         Category: {post.categoryName}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" style={{ marginRight: '20px', fontSize: '1rem' }}>
+                    <Typography variant="body2" color="text.secondary" style={{marginRight: '20px', fontSize: '1rem'}}>
                         Author: {post.authorFirstName} {post.authorLastName}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" style={{ marginRight: '20px', fontSize: '1rem' }}>
+                    <Typography variant="body2" color="text.secondary" style={{marginRight: '20px', fontSize: '1rem'}}>
                         Created At: {new Date(post.createdAt).toLocaleString()}
                     </Typography>
                 </Box>
@@ -113,8 +114,15 @@ const PostPage = () => {
                         {renderImage()}
                     </Grid>
                     <Grid item xs={12} sm={8}>
-                        <Box px={2} style={{ marginRight: '20px', marginBottom: '20px', marginLeft: '10px', width: '800px', backgroundColor: '#FBF8DD' }}>
-                            <Typography style={{ padding: '60px', width: '800px', backgroundColor: '#f8f6eb' }} variant="body1" paragraph>
+                        <Box px={2} style={{
+                            marginRight: '20px',
+                            marginBottom: '20px',
+                            marginLeft: '10px',
+                            width: '800px',
+                            backgroundColor: '#FBF8DD'
+                        }}>
+                            <Typography style={{padding: '60px', width: '800px', backgroundColor: '#f8f6eb'}}
+                                        variant="body1" paragraph>
                                 {post.body}
                             </Typography>
                         </Box>
@@ -122,29 +130,30 @@ const PostPage = () => {
                 </Grid>
 
                 <Typography variant="h5" gutterBottom>
-                    <Rating ratings={post.ratings} postId={id} />
+                    <Rating ratings={ratings}/>
                 </Typography>
 
                 <Box display="flex" alignItems="center" mb={2}>
-                    <TextField
-                        variant="outlined"
-                        type="number"
-                        InputProps={{ inputProps: { min: 1, max: 10 } }}
-                        value={newRating}
-                        onChange={handleRatingChange}
-                    />
-                    <Button variant="contained"
-                            style={{ backgroundColor: '#FFAE31', marginLeft:'10px'}}
-                            onClick={handleRatingSubmit}>
-                        Submit Rating
-                    </Button>
+                    <form onSubmit={handleRatingSubmit}>
+                        <TextField
+                            variant="outlined"
+                            type="number"
+                            InputProps={{inputProps: {min: 1, max: 10}}}
+                            value={newRating}
+                            onChange={handleRatingChange}
+                        />
+                        <Button type="submit" variant="contained" color="primary"
+                                style={{backgroundColor: '#FFAE31', marginLeft: '10px', marginTop: '10px'}}>
+                            Submit Rating
+                        </Button>
+                    </form>
                 </Box>
 
                 <Typography variant="h5" gutterBottom>
                     Comments
                 </Typography>
                 {comments.map(comment => (
-                    <Comment key={comment.id} comment={comment} />
+                    <Comment key={comment.id} comment={comment}/>
                 ))}
 
                 <form onSubmit={handleCommentSubmit}>
@@ -156,7 +165,8 @@ const PostPage = () => {
                         onChange={handleCommentChange}
                         required
                     />
-                    <Button type="submit" variant="contained" color="primary" style={{ backgroundColor: '#FFAE31', marginLeft:'10px', marginTop:'10px'}} >
+                    <Button type="submit" variant="contained" color="primary"
+                            style={{backgroundColor: '#FFAE31', marginLeft: '10px', marginTop: '10px'}}>
                         Submit
                     </Button>
                 </form>
