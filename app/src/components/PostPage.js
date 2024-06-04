@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardContent, Typography, CircularProgress, Grid, Box } from '@mui/material';
+import { Card, CardContent, Typography, CircularProgress, Grid, Box, TextField, Button } from '@mui/material';
 import axios from 'axios';
-import Rating from './Rating'; // Import the Rating component
+import Rating from './Rating';
 import Comment from './Comment';
-import PostDisplayCard from "./PostDisplayCard"; // Import the Comment component
 
 const PostPage = () => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [newComment, setNewComment] = useState('');
+    const [comments, setComments] = useState([]);
+    const [ratingValue, setRatingValue] = useState('');
 
     useEffect(() => {
         const fetchPost = async () => {
             try {
                 const response = await axios.get(`/posts/${id}`);
                 setPost(response.data);
+                setComments(response.data.comments);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching post:', error);
@@ -25,6 +28,38 @@ const PostPage = () => {
 
         fetchPost();
     }, [id]);
+
+    const handleCommentChange = (e) => {
+        setNewComment(e.target.value);
+    };
+
+    const handleCommentSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`/comments/${id}`, { text: newComment });
+            const newCommentData = response.data;
+            setComments([...comments, newCommentData]);
+            setNewComment('');
+        } catch (error) {
+            console.error('Error submitting comment:', error);
+        }
+    };
+
+    const handleRatingSubmit = async () => {
+        try {
+            await axios.post(`/ratings/${id}`, { value: ratingValue });
+            // Fetch updated post data
+            const response = await axios.get(`/posts/${id}`);
+            const updatedPostData = response.data;
+            // Update state with the new post data
+            setPost(updatedPostData);
+            setComments(updatedPostData.comments);
+            // Clear rating input
+            setRatingValue('');
+        } catch (error) {
+            console.error('Error submitting rating:', error);
+        }
+    };
 
     if (loading) {
         return <CircularProgress />;
@@ -38,18 +73,16 @@ const PostPage = () => {
         let imageUrl = '';
         if (post.id === 1) {
             imageUrl = "../../barcelona.jpg";
+        } else if (post.id === 2) {
+            imageUrl = "../../bologna.jpg";
         } else {
-            if (post.id === 2) {
-                imageUrl = "../../bologna.jpg";
-            } else {
-                imageUrl = "../../amsterdam.jpg";
-            }
+            imageUrl = "../../amsterdam.jpg";
         }
         return (
             <img
-                src={imageUrl}  // Replace with your custom image URL
+                src={imageUrl}
                 alt="Custom"
-                style={{width: '100%', height: 'auto'}}
+                style={{ width: '100%', height: 'auto' }}
             />
         );
     };
@@ -60,7 +93,7 @@ const PostPage = () => {
                 <Typography variant="h3" gutterBottom align="center">
                     {post.title}
                 </Typography>
-                <Box display="flex" justifyContent="center" alignItems="center" mb={10} >
+                <Box display="flex" justifyContent="center" alignItems="center" mb={10}>
                     <Typography variant="body2" color="text.secondary" style={{ marginRight: '20px', fontSize: '1rem' }}>
                         Category: {post.categoryName}
                     </Typography>
@@ -75,16 +108,9 @@ const PostPage = () => {
                     <Grid item xs={12} sm={4}>
                         {renderImage()}
                     </Grid>
-                    <Grid item xs={12} sm={8} >
-                        <Box px={2}
-                             style={{
-                                 marginRight: '20px',
-                                 marginBottom: '20px',
-                                 marginLeft: '10px',
-                                 width: '800px',
-                                 backgroundColor: '#FBF8DD' // Grey background color
-                             }}>
-                            <Typography variant="body1" paragraph>
+                    <Grid item xs={12} sm={8}>
+                        <Box px={2} style={{ marginRight: '20px', marginBottom: '20px', marginLeft: '10px', width: '800px', backgroundColor: '#FBF8DD' }}>
+                            <Typography style={{ padding: '60px', width: '800px', backgroundColor: '#f8f6eb' }} variant="body1" paragraph>
                                 {post.body}
                             </Typography>
                         </Box>
@@ -98,11 +124,33 @@ const PostPage = () => {
                 <Typography variant="h5" gutterBottom>
                     Comments
                 </Typography>
-                    {post.comments
-                        .filter((comment, index, self) => self.findIndex(c => c.id === comment.id) === index)
-                        .map(comment => {
-                            return <Comment key={comment.id} comment={comment} />;
-                    })}
+                {comments.map(comment => (
+                    <Comment key={comment.id} comment={comment} />
+                ))}
+
+                <form onSubmit={handleCommentSubmit}>
+                    <TextField
+                        label="Add a comment"
+                        variant="outlined"
+                        fullWidth
+                        value={newComment}
+                        onChange={handleCommentChange}
+                        required
+                    />
+                    <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
+                        Submit
+                    </Button>
+                </form>
+
+                <TextField
+                    label="Add your rating"
+                    variant="outlined"
+                    value={ratingValue}
+                    onChange={(e) => setRatingValue(e.target.value)}
+                />
+                <Button onClick={handleRatingSubmit} variant="contained" color="primary" style={{ marginTop: '10px' }}>
+                    Submit Rating
+                </Button>
             </CardContent>
         </Card>
     );

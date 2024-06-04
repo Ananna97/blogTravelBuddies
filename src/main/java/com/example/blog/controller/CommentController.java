@@ -1,8 +1,6 @@
 package com.example.blog.controller;
 
 import com.example.blog.dto.CommentDTO;
-import com.example.blog.dto.PostDTO;
-import com.example.blog.dto.PostDetailsDTO;
 import com.example.blog.model.Comment;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
@@ -11,13 +9,11 @@ import com.example.blog.service.PostService;
 import com.example.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,7 +25,8 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
     private final UserService userService;
-
+    private static final List<String> romanianFirstNames = Arrays.asList("Ion", "Maria", "Ana", "Gheorghe", "Elena");
+    private static final List<String> romanianLastNames = Arrays.asList("Popescu", "Ionescu", "Georgescu", "Dumitrescu", "Stoica");
     @GetMapping
     public List<CommentDTO> getComments() {
         List<Comment> comments = commentService.findAll();
@@ -52,24 +49,34 @@ public class CommentController {
                 comment.getUser().getLastName());
     }
 
-    @PostMapping("/{id}")
-//    @PreAuthorize("isAuthenticated()")
-    public String createNewComment(@PathVariable Long id, @ModelAttribute Comment comment, Principal principal) {
-        String authUsername = "anonymousUser";
 
-        if (principal != null) {
-            authUsername = principal.getName();
-        }
+    @PostMapping("/{postId}")
+    public CommentDTO createNewComment(@PathVariable Long postId, @RequestBody CommentDTO commentDTO) {
+        Random rand = new Random();
+        String randomFirstName = romanianFirstNames.get(rand.nextInt(romanianFirstNames.size()));
+        String randomLastName = romanianLastNames.get(rand.nextInt(romanianLastNames.size()));
 
-        User user = userService.findByEmail(authUsername).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        comment.setUser(user);
+        User randomUser = new User();
+        randomUser.setFirstName(randomFirstName);
+        randomUser.setLastName(randomLastName);
+        randomUser.setPassword("defaultPassword");
 
-        Optional<Post> optionalPost = Optional.ofNullable(postService.findById(id));
-        if (optionalPost.isPresent()) {
-            Post post = optionalPost.get();
-            comment.setPost(post);
-        }
-        commentService.save(comment);
-        return "redirect:/posts/" + id;
+        User savedUser = userService.save(randomUser);
+
+        Comment comment = new Comment();
+        comment.setText(commentDTO.getText());
+        comment.setUser(savedUser);
+
+        Post post = postService.findById(postId);
+        comment.setPost(post);
+
+        Comment savedComment = commentService.save(comment);
+
+        return new CommentDTO(
+                savedComment.getId(),
+                savedComment.getText(),
+                randomFirstName,
+                randomLastName);
     }
+
 }

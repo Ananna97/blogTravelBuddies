@@ -14,4 +14,9 @@ public class CommentDTO {
     private String text;
     private String authorCommentFirstName;
     private String authorCommentLastName;
+
+    public CommentDTO(Long id, String text) {
+        this.id = id;
+        this.text = text;
+    }
 }
