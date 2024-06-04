@@ -11,7 +11,10 @@ const PostPage = () => {
     const [loading, setLoading] = useState(true);
     const [newComment, setNewComment] = useState('');
     const [comments, setComments] = useState([]);
-    const [ratingValue, setRatingValue] = useState('');
+    const [newRating, setNewRating] = useState('');
+    const [ratings, setRatings] = useState([]);
+
+
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -29,6 +32,23 @@ const PostPage = () => {
         fetchPost();
     }, [id]);
 
+
+    const handleRatingChange = (e) => {
+        setNewRating(e.target.value);
+    };
+
+    const handleRatingSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`/ratings/${id}`, { text: newRating });
+            const newRatingData = response.data;
+            setRatings([...ratings, newRatingData]);
+            setNewRating('');
+        } catch (error) {
+            console.error('Error submitting rating:', error);
+        }
+    };
+
     const handleCommentChange = (e) => {
         setNewComment(e.target.value);
     };
@@ -42,22 +62,6 @@ const PostPage = () => {
             setNewComment('');
         } catch (error) {
             console.error('Error submitting comment:', error);
-        }
-    };
-
-    const handleRatingSubmit = async () => {
-        try {
-            await axios.post(`/ratings/${id}`, { value: ratingValue });
-            // Fetch updated post data
-            const response = await axios.get(`/posts/${id}`);
-            const updatedPostData = response.data;
-            // Update state with the new post data
-            setPost(updatedPostData);
-            setComments(updatedPostData.comments);
-            // Clear rating input
-            setRatingValue('');
-        } catch (error) {
-            console.error('Error submitting rating:', error);
         }
     };
 
@@ -118,8 +122,23 @@ const PostPage = () => {
                 </Grid>
 
                 <Typography variant="h5" gutterBottom>
-                    <Rating ratings={post.ratings} />
+                    <Rating ratings={post.ratings} postId={id} />
                 </Typography>
+
+                <Box display="flex" alignItems="center" mb={2}>
+                    <TextField
+                        variant="outlined"
+                        type="number"
+                        InputProps={{ inputProps: { min: 1, max: 10 } }}
+                        value={newRating}
+                        onChange={handleRatingChange}
+                    />
+                    <Button variant="contained"
+                            style={{ backgroundColor: '#FFAE31', marginLeft:'10px'}}
+                            onClick={handleRatingSubmit}>
+                        Submit Rating
+                    </Button>
+                </Box>
 
                 <Typography variant="h5" gutterBottom>
                     Comments
@@ -137,20 +156,10 @@ const PostPage = () => {
                         onChange={handleCommentChange}
                         required
                     />
-                    <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
+                    <Button type="submit" variant="contained" color="primary" style={{ backgroundColor: '#FFAE31', marginLeft:'10px', marginTop:'10px'}} >
                         Submit
                     </Button>
                 </form>
-
-                <TextField
-                    label="Add your rating"
-                    variant="outlined"
-                    value={ratingValue}
-                    onChange={(e) => setRatingValue(e.target.value)}
-                />
-                <Button onClick={handleRatingSubmit} variant="contained" color="primary" style={{ marginTop: '10px' }}>
-                    Submit Rating
-                </Button>
             </CardContent>
         </Card>
     );

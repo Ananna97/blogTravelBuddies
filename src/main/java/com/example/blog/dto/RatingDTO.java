@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 public class RatingDTO {
     private Long id;
-    private int value;
+    private Integer value;
 }
